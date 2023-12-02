@@ -14,7 +14,7 @@ fn main() {
     let inputs = fs::read_to_string(&args[2]).unwrap();
 
     match day {
-        // 1 => day1::run_day1(&inputs),
+        1 => day1::run_day1(&inputs),
         // 2 => day2::run_day2(&inputs),
         // 3 => day3::run_day3(&inputs),
         // 4 => day4::run_day4(&inputs),
