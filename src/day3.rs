@@ -13,7 +13,6 @@ pub fn run_day3(inputs: &String) {
         let day3_2 = day3_2(&inputs);
         println!("Day 3-2: {day3_2}");
     }
-    // day3_test();
 }
 
 fn day3_1(inputs: &String) -> usize {
