@@ -6,8 +6,13 @@ version = 3
 name = "aoc_2023"
 version = "0.1.0"
 dependencies = [
+ "grid",
  "timer",
 ]
+
+[[package]]
+name = "grid"
+version = "0.1.0"
 
 [[package]]
 name = "timer"
