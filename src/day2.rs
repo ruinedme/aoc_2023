@@ -38,10 +38,14 @@ impl Game {
         let mut sets: Vec<CubeSet> = Vec::new();
 
         for game_sets in input[offset..].split(";") {
-            let mut cube_set: CubeSet = CubeSet { red: 0, green: 0, blue: 0 };
+            let mut cube_set: CubeSet = CubeSet {
+                red: 0,
+                green: 0,
+                blue: 0,
+            };
             for color in game_sets.split(',') {
                 let t: Vec<&str> = color.trim().split(' ').collect();
-                
+
                 match t[1].trim() {
                     "red" => cube_set.red = t[0].trim().parse().unwrap(),
                     "blue" => cube_set.blue = t[0].trim().parse().unwrap(),
@@ -60,7 +64,11 @@ fn day2_1(inputs: &String) -> usize {
     let mut total = 0;
     for line in inputs.lines() {
         let game = Game::new(line);
-        let impossible_games: Vec<&CubeSet> = game.sets.iter().filter(|&x| x.red > MAX_RED || x.green > MAX_GREEN || x.blue > MAX_BLUE).collect();
+        let impossible_games: Vec<&CubeSet> = game
+            .sets
+            .iter()
+            .filter(|&x| x.red > MAX_RED || x.green > MAX_GREEN || x.blue > MAX_BLUE)
+            .collect();
 
         if impossible_games.len() == 0 {
             total += game.id;
@@ -71,13 +79,28 @@ fn day2_1(inputs: &String) -> usize {
 
 fn day2_2(inputs: &String) -> usize {
     let mut total = 0;
-    
+
     for line in inputs.lines() {
         let game = Game::new(line);
-        let red = game.sets.iter().max_by(|x,y| x.red.cmp(&y.red)).unwrap().red;
-        let green = game.sets.iter().max_by(|x,y| x.green.cmp(&y.green)).unwrap().green;
-        let blue = game.sets.iter().max_by(|x,y| x.blue.cmp(&y.blue)).unwrap().blue;
-        
+        let red = game
+            .sets
+            .iter()
+            .max_by(|x, y| x.red.cmp(&y.red))
+            .unwrap()
+            .red;
+        let green = game
+            .sets
+            .iter()
+            .max_by(|x, y| x.green.cmp(&y.green))
+            .unwrap()
+            .green;
+        let blue = game
+            .sets
+            .iter()
+            .max_by(|x, y| x.blue.cmp(&y.blue))
+            .unwrap()
+            .blue;
+
         total += red * green * blue;
     }
     return total;
