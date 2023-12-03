@@ -9,14 +9,16 @@ fn main() {
         return;
     }
 
-    let day: &u8 = &args[1].parse().expect("Day must be between 1 and 25 inclusive.");
+    let day: &u8 = &args[1]
+        .parse()
+        .expect("Day must be between 1 and 25 inclusive.");
 
     let inputs = fs::read_to_string(&args[2]).unwrap();
 
     match day {
         1 => day1::run_day1(&inputs),
         2 => day2::run_day2(&inputs),
-        // 3 => day3::run_day3(&inputs),
+        3 => day3::run_day3(&inputs),
         // 4 => day4::run_day4(&inputs),
         // 5 => day5::run_day5(&inputs),
         // 6 => day6::run_day6(&inputs),
