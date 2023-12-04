@@ -75,7 +75,7 @@ fn day4_2(inputs: &String) -> usize {
         matches.push(matching_numbers.len());
     }
 
-    // for each instance of card (i), add 1 copy to i+1..i+n+1 where n is the number of matches for iW
+    // for each instance of card (i), add 1 copy to i+1..i+n+1 where n is the number of matches for i
     for (i, &n) in matches.iter().enumerate() {
         //process each copy of current card
         for _ in 0..*copies.get(&i).unwrap() {
