@@ -80,7 +80,7 @@ macro_rules! profile {
         } else if elapsed_time >= 1_000_000.0 {
             println!("Elapsed: {:.4}s", elapsed_time / 1_000_000.0);
         } else {
-            println!("Elapsed: {:.4}\u{03bc}s", elapsed_time / 1000.0);
+            println!("Elapsed: {:.4}ms", elapsed_time / 1000.0);
         }
     };
 }
