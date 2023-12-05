@@ -20,7 +20,7 @@ fn main() {
         2 => day2::run_day2(&inputs),
         3 => day3::run_day3(&inputs),
         4 => day4::run_day4(&inputs),
-        // 5 => day5::run_day5(&inputs),
+        5 => day5::run_day5(&inputs), // TODO: Refactor part2
         // 6 => day6::run_day6(&inputs),
         // 7 => day7::run_day7(&inputs),
         // 8 => day8::run_day8(&inputs),
