@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use timer::profile;
 
@@ -14,73 +14,51 @@ pub fn run_day4(inputs: &String) {
     }
 }
 
-fn day4_1(inputs: &String) -> usize {
-    let mut total = 0;
+fn parse(inputs: &String) -> Vec<HashSet<&str>> {
+    let mut cards: Vec<HashSet<&str>> = Vec::new();
     for line in inputs.lines() {
         let numbers: Vec<&str> = line.split(": ").collect();
         let numbers: Vec<&str> = numbers[1].trim().split(" | ").collect();
-        let winning_numbers: Vec<&str> = numbers[0]
+        let winning_numbers: HashSet<&str> = numbers[0]
             .trim()
-            .split(" ")
-            .filter(|&x| !x.is_empty())
+            .split_ascii_whitespace()
             .map(|x| x.trim())
             .collect();
-        let numbers_you_have: Vec<&str> = numbers[1]
+        let numbers_you_have: HashSet<&str> = numbers[1]
             .trim()
-            .split(" ")
-            .filter(|&x| !x.is_empty())
+            .split_ascii_whitespace()
             .map(|x| x.trim())
             .collect();
-        let matching_numbers: Vec<&str> = winning_numbers
-            .iter()
-            .filter(|&x| numbers_you_have.contains(&x))
+        let matching_numbers: HashSet<&str> = winning_numbers
+            .intersection(&numbers_you_have)
             .map(|&x| x)
             .collect();
-
-        if !matching_numbers.is_empty() {
-            let x = 2i32.pow(matching_numbers.len() as u32 - 1) as usize;
-            total += x;
-        }
+        cards.push(matching_numbers);
     }
-    return total;
+
+    return cards;
+}
+
+fn day4_1(inputs: &String) -> usize {
+    return parse(inputs)
+        .iter()
+        .filter(|&x| !x.is_empty())
+        .fold(0, |acc, x| acc + 2i32.pow(x.len() as u32 - 1) as usize);
 }
 
 fn day4_2(inputs: &String) -> usize {
-    let mut matches: Vec<usize> = Vec::new();
-    let mut copies: HashMap<usize, usize> = HashMap::new();
+    let cards = parse(inputs);
+    let mut copies: HashMap<usize, usize> = cards
+        .iter()
+        .enumerate()
+        .map(|(card, _)| (card, 1))
+        .collect();
 
-    for (card, line) in inputs.lines().enumerate() {
-        copies.entry(card).and_modify(|x| *x += 1).or_insert(1);
-
-        let numbers: Vec<&str> = line.split(": ").collect();
-        let numbers: Vec<&str> = numbers[1].trim().split(" | ").collect();
-        let winning_numbers: Vec<&str> = numbers[0]
-            .trim()
-            .split(" ")
-            .filter(|&x| !x.is_empty())
-            .map(|x| x.trim())
-            .collect();
-        let numbers_you_have: Vec<&str> = numbers[1]
-            .trim()
-            .split(" ")
-            .filter(|&x| !x.is_empty())
-            .map(|x| x.trim())
-            .collect();
-        let matching_numbers: Vec<&str> = winning_numbers
-            .iter()
-            .filter(|&x| numbers_you_have.contains(&x))
-            .map(|&x| x)
-            .collect();
-
-        matches.push(matching_numbers.len());
-    }
-
-    // for each instance of card (i), add 1 copy to i+1..i+n+1 where n is the number of matches for i
-    for (i, &n) in matches.iter().enumerate() {
+    for (i, n) in cards.iter().enumerate() {
         //process each copy of current card
         for _ in 0..*copies.get(&i).unwrap() {
             //add the copy
-            for j in i + 1..i + n + 1 {
+            for j in i + 1..i + n.len() + 1 {
                 copies.entry(j).and_modify(|x| *x += 1).or_insert(1);
             }
         }
