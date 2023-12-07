@@ -82,7 +82,7 @@ impl SeedMap {
         return SeedMap { seeds, categories };
     }
 
-    fn calculate_seed_location(&self, seed: usize) -> usize {
+    fn seed_to_location(&self, seed: usize) -> usize {
         let mut location = seed;
         for category in &self.categories {
             for range in &category.ranges {
@@ -99,13 +99,47 @@ impl SeedMap {
         }
         return location;
     }
+
+    // Very hacky can probably be done better
+    fn location_to_seed(&self, location: usize) -> usize {
+        let mut category = self.categories.len() - 1;
+        let mut seed = location;
+
+        while category > 0 {
+            for range in &self.categories[category].ranges {
+                if seed >= range.dest_start && seed < range.dest_start + range.range {
+                    let offset = range.source_start.abs_diff(range.dest_start);
+                    if range.dest_start < range.source_start {
+                        seed += offset
+                    } else {
+                        seed -= offset;
+                    }
+                    break;
+                }
+            }
+            category -= 1;
+        }
+        // have to do a final iteration on categories[0] due to the above causing a an out of bounds error checking for >= 0
+        for range in &self.categories[0].ranges {
+            if seed >= range.dest_start && seed < range.dest_start + range.range {
+                let offset = range.source_start.abs_diff(range.dest_start);
+                if range.dest_start < range.source_start {
+                    seed += offset
+                } else {
+                    seed -= offset;
+                }
+                break;
+            }
+        }
+        return seed;
+    }
 }
 
 fn day5_1(inputs: &String) -> usize {
     let seed_map = SeedMap::new(inputs);
     let mut lowest = usize::MAX;
     for seed in &seed_map.seeds {
-        let location = seed_map.calculate_seed_location(*seed);
+        let location = seed_map.seed_to_location(*seed);
         lowest = lowest.min(location);
     }
 
@@ -114,15 +148,45 @@ fn day5_1(inputs: &String) -> usize {
 
 fn day5_2(inputs: &String) -> usize {
     let seed_map = SeedMap::new(inputs);
-    let mut lowest = usize::MAX;
+    let higest_seed = &seed_map
+        .seeds
+        .iter()
+        .enumerate()
+        .step_by(2)
+        .map(|(i, &x)| x + &seed_map.seeds[i + 1])
+        .max()
+        .unwrap();
 
-    for i in (0..seed_map.seeds.len() - 1).step_by(2) {
-        let range = seed_map.seeds[i] + seed_map.seeds[i + 1];
-        for seed in seed_map.seeds[i]..range {
-            let location = seed_map.calculate_seed_location(seed);
-            lowest = lowest.min(location);
+    // The idea being start at seed location 1 and work backwards from the mappings to find the seed location.
+    // Return the first seed that is in any given seed range.
+    for i in 1..higest_seed + 1 {
+        let location = seed_map.location_to_seed(i);
+        let seed: Vec<usize> = seed_map
+            .seeds
+            .iter()
+            .enumerate()
+            .step_by(2)
+            .filter(|(i, &x)| {
+                let range = x + seed_map.seeds[i + 1];
+                location >= x && location <= range
+            })
+            .map(|x| *x.1)
+            .collect();
+        if !seed.is_empty() {
+            return i;
         }
     }
 
-    return lowest;
+    // Original solution ~2 minutes
+    // let mut lowest = usise::MAX;
+    // for i in (0..seed_map.seeds.len() - 1).step_by(2) {
+    //     let range = seed_map.seeds[i] + seed_map.seeds[i + 1];
+    //     for seed in seed_map.seeds[i]..range {
+    //         let location = seed_map.calculate_seed_location(seed);
+    //         lowest = lowest.min(location);
+    //     }
+    // }
+    // return max;
+
+    panic!("Failed to Find Seed Mapping");
 }
