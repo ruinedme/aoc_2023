@@ -14,12 +14,10 @@ pub fn run_day7(inputs: &String) {
     }
 }
 
-// #[allow(dead_code)]
 const CARDS: [u8; 13] = [
     b'2', b'3', b'4', b'5', b'6', b'7', b'8', b'9', b'T', b'J', b'Q', b'K', b'A',
 ];
 
-// #[allow(dead_code)]
 #[derive(PartialEq, PartialOrd, Debug)]
 enum HandType {
     None,
@@ -32,7 +30,6 @@ enum HandType {
     FiveOfKind,
 }
 
-// #[allow(dead_code)]
 #[derive(Debug)]
 struct Round {
     hand: String,
@@ -49,7 +46,6 @@ impl PartialEq for Round {
 
 impl PartialOrd for Round {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        // return self.hand_type.partial_cmp(&other.hand_type);
         match self.hand_type.partial_cmp(&other.hand_type) {
             Some(core::cmp::Ordering::Equal) => {
                 for i in 0..5 {
