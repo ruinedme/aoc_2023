@@ -86,7 +86,12 @@ impl Map {
 
 fn day8_1(inputs: &String) -> usize {
     let map = Map::new(inputs);
-    let start_node: Vec<Vec<u8>> = map.nodes.iter().filter(|x| x.0.last().unwrap() == &b'A').map(|x| x.0.clone()).collect();
+    let start_node: Vec<Vec<u8>> = map
+        .nodes
+        .iter()
+        .filter(|x| x.0.last().unwrap() == &b'A')
+        .map(|x| x.0.clone())
+        .collect();
     return map.get_moves(&start_node[0]);
 }
 
@@ -96,7 +101,7 @@ fn day8_1(inputs: &String) -> usize {
 fn day8_2(inputs: &String) -> usize {
     let map = Map::new(inputs);
 
-    let current_nodes: Vec<(Vec<u8>,Node)> = map
+    let current_nodes: Vec<(Vec<u8>, Node)> = map
         .nodes
         .iter()
         .filter(|&x| x.0.last().unwrap() == &b'A')
