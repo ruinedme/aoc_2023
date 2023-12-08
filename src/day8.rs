@@ -14,14 +14,12 @@ pub fn run_day8(inputs: &String) {
     }
 }
 
-#[allow(dead_code)]
 #[derive(Debug, Clone)]
 struct Node {
     left: Vec<u8>,
     right: Vec<u8>,
 }
 
-#[allow(dead_code)]
 #[derive(Debug)]
 struct Map {
     move_sequence: Vec<u8>,
@@ -109,7 +107,7 @@ fn day8_2(inputs: &String) -> usize {
     if moves.len() == 1 {
         return moves[0];
     }
-    
+
     moves.sort();
     moves.reverse();
 
