@@ -108,9 +108,6 @@ fn day8_2(inputs: &String) -> usize {
         return moves[0];
     }
 
-    moves.sort();
-    moves.reverse();
-
     let gcf = map.move_sequence.len();
     let mut lcm = (moves.pop().unwrap() * moves.pop().unwrap()) / gcf;
     // handle if moves only had 2 starting locations like in the example
