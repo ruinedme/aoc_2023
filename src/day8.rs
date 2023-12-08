@@ -106,6 +106,10 @@ fn day8_2(inputs: &String) -> usize {
         .collect();
 
     let mut moves: Vec<usize> = current_nodes.iter().map(|x| map.get_moves(&x.0)).collect();
+    if moves.len() == 1 {
+        return moves[0];
+    }
+    
     moves.sort();
     moves.reverse();
 
