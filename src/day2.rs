@@ -77,8 +77,7 @@ fn day2_1(inputs: &str) -> usize {
             total += game.id;
         }
     }
-    
-    #[allow(clippy::needless_return)]
+
     return total;
 }
 

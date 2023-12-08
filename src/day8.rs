@@ -31,21 +31,17 @@ struct Map {
 impl Map {
     fn new(inputs: &str) -> Self {
         let mut lines = inputs.lines();
-        let move_sequence: Vec<u8> = lines
-            .next()
-            .unwrap()
-            .as_bytes()
-            .to_vec();
+        let move_sequence: Vec<u8> = lines.next().unwrap().bytes().collect();
         lines.next();
 
         let nodes: HashMap<Vec<u8>, Node> = lines
             .map(|x| {
                 let split: Vec<&str> = x.split_ascii_whitespace().collect();
                 (
-                    split[0].as_bytes().to_vec(),
+                    split[0].bytes().collect(),
                     Node {
-                        left: split[2][1..4].as_bytes().to_vec(),
-                        right: split[3][0..3].as_bytes().to_vec(),
+                        left: split[2][1..4].bytes().collect(),
+                        right: split[3][0..3].bytes().collect(),
                     },
                 )
             })
@@ -112,15 +108,17 @@ fn day8_2(inputs: &str) -> usize {
     if moves.len() == 1 {
         return moves[0];
     }
-    
+
     let gcf = map.move_sequence.len();
     let mut lcm = (moves.pop().unwrap() * moves.pop().unwrap()) / gcf;
     // handle if moves only had 2 starting locations like in the example
     if moves.is_empty() {
         return lcm * gcf;
     }
+    
     while !moves.is_empty() {
         lcm = (lcm * moves.pop().unwrap()) / gcf;
     }
+
     return lcm;
 }
