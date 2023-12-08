@@ -112,7 +112,7 @@ fn day8_2(inputs: &str) -> usize {
     if moves.len() == 1 {
         return moves[0];
     }
-    println!("moves {:?}", moves);
+    
     let gcf = map.move_sequence.len();
     let mut lcm = (moves.pop().unwrap() * moves.pop().unwrap()) / gcf;
     // handle if moves only had 2 starting locations like in the example
