@@ -1,15 +1,17 @@
+#![allow(clippy::needless_return)]
+
 use std::collections::HashMap;
 
 use timer::profile;
 
-pub fn run_day7(inputs: &String) {
+pub fn run_day7(inputs: &str) {
     profile! {
-        let day7_1 = day7_1(&inputs);
+        let day7_1 = day7_1(inputs);
         println!("Day 7-1: {day7_1}");
     }
 
     profile! {
-        let day7_2 = day7_2(&inputs);
+        let day7_2 = day7_2(inputs);
         println!("Day 7-2: {day7_2}");
     }
 }
@@ -79,14 +81,8 @@ impl Round {
         let mut hand_type = HandType::None;
         let max = card_map
             .iter()
-            .filter(|&x| {
-                if wildcards && *x.0 == b'J' && card_map.keys().len() > 1 {
-                    false
-                } else {
-                    true
-                }
-            })
-            .max_by(|x, &y| x.1.cmp(&y.1))
+            .filter(|&x| !(wildcards && *x.0 == b'J' && card_map.keys().len() > 1))
+            .max_by(|x, &y| x.1.cmp(y.1))
             .map(|x| *x.1)
             .unwrap();
         if wildcards && card_map.contains_key(&b'J') && card_map.keys().len() > 1 {
@@ -151,7 +147,7 @@ impl Round {
     }
 }
 
-fn day7_1(inputs: &String) -> usize {
+fn day7_1(inputs: &str) -> usize {
     let mut rounds: Vec<Round> = inputs.lines().map(|x| Round::new(x, false)).collect();
     rounds.sort_by(|a, b| a.partial_cmp(b).unwrap());
 
@@ -162,7 +158,7 @@ fn day7_1(inputs: &String) -> usize {
         .sum();
 }
 
-fn day7_2(inputs: &String) -> usize {
+fn day7_2(inputs: &str) -> usize {
     let mut rounds: Vec<Round> = inputs.lines().map(|x| Round::new(x, true)).collect();
     rounds.sort_by(|a, b| a.partial_cmp(b).unwrap());
 

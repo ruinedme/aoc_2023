@@ -1,20 +1,22 @@
+#![allow(clippy::needless_return)]
+
 use std::collections::{HashMap, HashSet};
 
 use timer::profile;
 
-pub fn run_day4(inputs: &String) {
+pub fn run_day4(inputs: &str) {
     profile! {
-        let day4_1 = day4_1(&inputs);
+        let day4_1 = day4_1(inputs);
         println!("Day 4-1: {day4_1}");
     }
 
     profile! {
-        let day4_2 = day4_2(&inputs);
+        let day4_2 = day4_2(inputs);
         println!("Day 4-2: {day4_2}");
     }
 }
 
-fn parse(inputs: &String) -> Vec<HashSet<&str>> {
+fn parse(inputs: &str) -> Vec<HashSet<&str>> {
     let mut cards: Vec<HashSet<&str>> = Vec::new();
     for line in inputs.lines() {
         let numbers: Vec<&str> = line.split(": ").collect();
@@ -31,7 +33,7 @@ fn parse(inputs: &String) -> Vec<HashSet<&str>> {
             .collect();
         let matching_numbers: HashSet<&str> = winning_numbers
             .intersection(&numbers_you_have)
-            .map(|&x| x)
+            .copied()
             .collect();
         cards.push(matching_numbers);
     }
@@ -39,14 +41,14 @@ fn parse(inputs: &String) -> Vec<HashSet<&str>> {
     return cards;
 }
 
-fn day4_1(inputs: &String) -> usize {
+fn day4_1(inputs: &str) -> usize {
     return parse(inputs)
         .iter()
         .filter(|&x| !x.is_empty())
         .fold(0, |acc, x| acc + 2i32.pow(x.len() as u32 - 1) as usize);
 }
 
-fn day4_2(inputs: &String) -> usize {
+fn day4_2(inputs: &str) -> usize {
     let cards = parse(inputs);
     let mut copies: HashMap<usize, usize> = cards
         .iter()

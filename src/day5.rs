@@ -1,13 +1,15 @@
+#![allow(clippy::needless_return)]
+
 use timer::profile;
 
-pub fn run_day5(inputs: &String) {
+pub fn run_day5(inputs: &str) {
     profile! {
-        let day5_1 = day5_1(&inputs);
+        let day5_1 = day5_1(inputs);
         println!("Day 5-1: {day5_1}");
     }
 
     profile! {
-        let day5_2 = day5_2(&inputs);
+        let day5_2 = day5_2(inputs);
         println!("Day 5-2: {day5_2}");
     }
 }
@@ -20,10 +22,8 @@ struct Range {
     range: usize,
 }
 
-#[allow(dead_code)]
 #[derive(Debug)]
 struct Category {
-    name: String,
     ranges: Vec<Range>,
 }
 
@@ -33,9 +33,8 @@ struct SeedMap {
 }
 
 impl SeedMap {
-    fn new(inputs: &String) -> Self {
+    fn new(inputs: &str) -> Self {
         let mut seeds: Vec<usize> = Vec::new();
-        let mut map_name = String::new();
         let mut categories: Vec<Category> = Vec::new();
         let mut ranges: Vec<Range> = Vec::new();
 
@@ -50,14 +49,11 @@ impl SeedMap {
             }
 
             if line.contains("-to-") {
-                let a: Vec<&str> = line.split_ascii_whitespace().collect();
-                map_name = String::from(a[0]);
                 continue;
             }
 
             if line.is_empty() && !&ranges.is_empty() {
                 categories.push(Category {
-                    name: map_name.clone(),
                     ranges: ranges.clone(),
                 });
                 ranges.clear();
@@ -76,7 +72,7 @@ impl SeedMap {
             }
         }
         categories.push(Category {
-            name: map_name.clone(),
+            // name: map_name.clone(),
             ranges: ranges.clone(),
         });
         return SeedMap { seeds, categories };
@@ -135,7 +131,7 @@ impl SeedMap {
     }
 }
 
-fn day5_1(inputs: &String) -> usize {
+fn day5_1(inputs: &str) -> usize {
     let seed_map = SeedMap::new(inputs);
     let mut lowest = usize::MAX;
     for seed in &seed_map.seeds {
@@ -146,14 +142,14 @@ fn day5_1(inputs: &String) -> usize {
     return lowest;
 }
 
-fn day5_2(inputs: &String) -> usize {
+fn day5_2(inputs: &str) -> usize {
     let seed_map = SeedMap::new(inputs);
     let higest_seed = &seed_map
         .seeds
         .iter()
         .enumerate()
         .step_by(2)
-        .map(|(i, &x)| x + &seed_map.seeds[i + 1])
+        .map(|(i, &x)| x + seed_map.seeds[i + 1])
         .max()
         .unwrap();
 

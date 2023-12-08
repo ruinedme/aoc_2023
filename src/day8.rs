@@ -1,15 +1,17 @@
+#![allow(clippy::needless_return)]
+
 use std::collections::HashMap;
 
 use timer::profile;
 
-pub fn run_day8(inputs: &String) {
+pub fn run_day8(inputs: &str) {
     profile! {
-        let day8_1 = day8_1(&inputs);
+        let day8_1 = day8_1(inputs);
         println!("Day 8-1: {day8_1}");
     }
 
     profile! {
-        let day8_2 = day8_2(&inputs);
+        let day8_2 = day8_2(inputs);
         println!("Day 8-2: {day8_2}");
     }
 }
@@ -27,25 +29,23 @@ struct Map {
 }
 
 impl Map {
-    fn new<'a>(inputs: &String) -> Self {
+    fn new(inputs: &str) -> Self {
         let mut lines = inputs.lines();
         let move_sequence: Vec<u8> = lines
             .next()
             .unwrap()
             .as_bytes()
-            .iter()
-            .map(|x| *x)
-            .collect();
+            .to_vec();
         lines.next();
 
         let nodes: HashMap<Vec<u8>, Node> = lines
             .map(|x| {
                 let split: Vec<&str> = x.split_ascii_whitespace().collect();
                 (
-                    split[0].as_bytes().iter().map(|x| *x).collect(),
+                    split[0].as_bytes().to_vec(),
                     Node {
-                        left: split[2][1..4].as_bytes().iter().map(|x| *x).collect(),
-                        right: split[3][0..3].as_bytes().iter().map(|x| *x).collect(),
+                        left: split[2][1..4].as_bytes().to_vec(),
+                        right: split[3][0..3].as_bytes().to_vec(),
                     },
                 )
             })
@@ -84,7 +84,7 @@ impl Map {
     }
 }
 
-fn day8_1(inputs: &String) -> usize {
+fn day8_1(inputs: &str) -> usize {
     let map = Map::new(inputs);
     let start_node: Vec<Vec<u8>> = map
         .nodes
@@ -98,7 +98,7 @@ fn day8_1(inputs: &String) -> usize {
 // length of move sequence is a prime number
 // all move sequences will be a factor of the move sequence length
 // answer is LCM(n0,n1,..) where n is the minimum move sequence of each starting node
-fn day8_2(inputs: &String) -> usize {
+fn day8_2(inputs: &str) -> usize {
     let map = Map::new(inputs);
 
     let current_nodes: Vec<(Vec<u8>, Node)> = map
@@ -112,14 +112,14 @@ fn day8_2(inputs: &String) -> usize {
     if moves.len() == 1 {
         return moves[0];
     }
-
+    println!("moves {:?}", moves);
     let gcf = map.move_sequence.len();
     let mut lcm = (moves.pop().unwrap() * moves.pop().unwrap()) / gcf;
     // handle if moves only had 2 starting locations like in the example
-    if moves.len() == 0 {
+    if moves.is_empty() {
         return lcm * gcf;
     }
-    while moves.len() > 0 {
+    while !moves.is_empty() {
         lcm = (lcm * moves.pop().unwrap()) / gcf;
     }
     return lcm;

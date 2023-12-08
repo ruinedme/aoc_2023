@@ -1,13 +1,15 @@
+#![allow(clippy::needless_return)]
+
 use timer::profile;
 
-pub fn run_day6(inputs: &String) {
+pub fn run_day6(inputs: &str) {
     profile! {
-        let day6_1 = day6_1(&inputs);
+        let day6_1 = day6_1(inputs);
         println!("Day 6-1: {day6_1}");
     }
 
     profile! {
-        let day6_2 = day6_2(&inputs);
+        let day6_2 = day6_2(inputs);
         println!("Day 6-2: {day6_2}");
     }
 }
@@ -18,7 +20,7 @@ struct Races {
 }
 
 impl Races {
-    fn new(inputs: &String) -> Self {
+    fn new(inputs: &str) -> Self {
         let mut times: Vec<usize> = Vec::new();
         let mut distances: Vec<usize> = Vec::new();
 
@@ -26,13 +28,13 @@ impl Races {
             if times.is_empty() {
                 times = line
                     .split_ascii_whitespace()
-                    .filter(|&x| !x.starts_with("T"))
+                    .filter(|&x| !x.starts_with('T'))
                     .map(|x| x.parse().unwrap())
                     .collect();
             } else {
                 distances = line
                     .split_ascii_whitespace()
-                    .filter(|&x| !x.starts_with("D"))
+                    .filter(|&x| !x.starts_with('D'))
                     .map(|x| x.parse().unwrap())
                     .collect();
             }
@@ -42,7 +44,7 @@ impl Races {
     }
 }
 
-fn day6_1(inputs: &String) -> usize {
+fn day6_1(inputs: &str) -> usize {
     let races = Races::new(inputs);
 
     let mut combos: Vec<usize> = Vec::new();
@@ -62,7 +64,7 @@ fn day6_1(inputs: &String) -> usize {
     return combos.iter().product();
 }
 
-fn day6_2(inputs: &String) -> usize {
+fn day6_2(inputs: &str) -> usize {
     let races = Races::new(inputs);
     let mut time = String::new();
     let mut target = String::new();

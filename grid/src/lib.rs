@@ -4,7 +4,7 @@ pub struct Grid {
 
 impl Grid {
     /// Converts a multi line string into a 2D byte Vector
-    pub fn new(inputs: &String) -> Self {
+    pub fn new(inputs: &str) -> Self {
         let lines = inputs.lines();
     
         let mut input_map: Vec<Vec<u8>> = Vec::new();

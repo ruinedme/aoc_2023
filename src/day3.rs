@@ -1,21 +1,23 @@
+#![allow(clippy::needless_return)]
+
 use std::collections::HashMap;
 
 use grid::Grid;
 use timer::profile;
 
-pub fn run_day3(inputs: &String) {
+pub fn run_day3(inputs: &str) {
     profile! {
-        let day3_1 = day3_1(&inputs);
+        let day3_1 = day3_1(inputs);
         println!("Day 3-1: {day3_1}");
     }
 
     profile! {
-        let day3_2 = day3_2(&inputs);
+        let day3_2 = day3_2(inputs);
         println!("Day 3-2: {day3_2}");
     }
 }
 
-fn day3_1(inputs: &String) -> usize {
+fn day3_1(inputs: &str) -> usize {
     let mut total = 0;
     let grid = Grid::new(inputs);
 
@@ -50,17 +52,15 @@ fn day3_1(inputs: &String) -> usize {
             }
         }
         // handle numbers at the end of a line
-        if !buff.is_empty() {
-            if is_part_num {
-                let s: usize = String::from_utf8(buff.clone()).unwrap().parse().unwrap();
-                total += s;
-            }
+        if !buff.is_empty() && is_part_num {
+            let s: usize = String::from_utf8(buff.clone()).unwrap().parse().unwrap();
+            total += s;
         }
     }
     return total;
 }
 
-fn day3_2(inputs: &String) -> usize {
+fn day3_2(inputs: &str) -> usize {
     let grid = Grid::new(inputs);
     let mut gears: HashMap<(usize, usize), Vec<usize>> = HashMap::new();
 
@@ -73,13 +73,9 @@ fn day3_2(inputs: &String) -> usize {
                 b'0'..=b'9' => {
                     buff.push(x);
                     grid.get_all_neighbors((row, col)).iter().for_each(|&n| {
-                        match grid.map[n.0][n.1] {
-                            // b'.'|b'0'..=b'9' => (),
-                            b'*' => {
-                                is_gear = true;
-                                gear_pos = n;
-                            }
-                            _ => (),
+                        if grid.map[n.0][n.1] == b'*' {
+                            is_gear = true;
+                            gear_pos = n
                         }
                     });
                 }
@@ -100,14 +96,12 @@ fn day3_2(inputs: &String) -> usize {
             }
         }
         // handle numbers at the end of a line
-        if !buff.is_empty() {
-            if is_gear {
-                let s: usize = String::from_utf8(buff.clone()).unwrap().parse().unwrap();
-                gears
-                    .entry(gear_pos)
-                    .and_modify(|x| x.push(s))
-                    .or_insert(vec![s]);
-            }
+        if !buff.is_empty() && is_gear {
+            let s: usize = String::from_utf8(buff.clone()).unwrap().parse().unwrap();
+            gears
+                .entry(gear_pos)
+                .and_modify(|x| x.push(s))
+                .or_insert(vec![s]);
         }
     }
 

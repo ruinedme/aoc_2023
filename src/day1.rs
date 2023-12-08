@@ -1,24 +1,26 @@
+#![allow(clippy::needless_return)]
+
 use timer::profile;
 
-pub fn run_day1(inputs: &String) {
+pub fn run_day1(inputs: &str) {
     profile! {
-        let day1_1 = day1_1(&inputs);
+        let day1_1 = day1_1(inputs);
         println!("Day 1-1: {day1_1}");
     }
 
     profile! {
-        let day1_2 = day1_2(&inputs);
+        let day1_2 = day1_2(inputs);
         println!("Day 1-2: {day1_2}");
     }
 }
 
-fn day1_1(inputs: &String) -> usize {
+fn day1_1(inputs: &str) -> usize {
     return inputs
         .lines()
         .map(|line| {
             line.to_string()
                 .chars()
-                .filter(|c| c.is_digit(10))
+                .filter(|c| c.is_ascii_digit())
                 .map(|c| c.to_digit(10).unwrap() as usize)
                 .collect::<Vec<usize>>()
         })
@@ -26,7 +28,7 @@ fn day1_1(inputs: &String) -> usize {
         .sum();
 }
 
-fn day1_2(inputs: &String) -> usize {
+fn day1_2(inputs: &str) -> usize {
     return inputs
         .lines()
         .map(|line| {
@@ -42,7 +44,7 @@ fn day1_2(inputs: &String) -> usize {
                 .replace("eight", "eight8eight")
                 .replace("nine", "nine9nine")
                 .chars()
-                .filter(|c| c.is_digit(10))
+                .filter(|c| c.is_ascii_digit())
                 .map(|c| c.to_digit(10).unwrap() as usize)
                 .collect::<Vec<usize>>()
         })
