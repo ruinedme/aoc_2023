@@ -1,6 +1,8 @@
+#![allow(clippy::needless_return)]
+
 use timer::profile;
 
-pub fn run_day{day}(inputs: &String) {
+pub fn run_day{day}(inputs: &str) {
     profile! {
         let day{day}_1 = day{day}_1(&inputs);
         println!("Day {day}-1: {day{day}_1}");
@@ -12,10 +14,10 @@ pub fn run_day{day}(inputs: &String) {
     }
 }
 
-fn day{day}_1(inputs: &String) -> usize {
+fn day{day}_1(inputs: &str) -> usize {
     return 0;
 }
 
-fn day{day}_2(inputs: &String) -> usize {
+fn day{day}_2(inputs: &str) -> usize {
     return 0;
 }
