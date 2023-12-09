@@ -115,7 +115,7 @@ fn day8_2(inputs: &str) -> usize {
     if moves.is_empty() {
         return lcm * gcf;
     }
-    
+
     while !moves.is_empty() {
         lcm = (lcm * moves.pop().unwrap()) / gcf;
     }
