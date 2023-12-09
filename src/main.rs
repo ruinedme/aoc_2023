@@ -24,7 +24,7 @@ fn main() {
         6 => day6::run_day6(&inputs),
         7 => day7::run_day7(&inputs),
         8 => day8::run_day8(&inputs),
-        // 9 => day9::run_day9(&inputs),
+        9 => day9::run_day9(&inputs),
         // 10 => day10::run_day10(&inputs),
         // 11 => day11::run_day11(&inputs),
         // 12 => day12::run_day12(&inputs),
