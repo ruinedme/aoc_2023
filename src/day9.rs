@@ -21,9 +21,8 @@ fn day9_1(inputs: &str) -> isize {
             .split_ascii_whitespace()
             .map(|x| x.parse().unwrap())
             .collect();
-        let n = find_next_sequence(&history);
 
-        total += n;
+        total += find_next_sequence(&history);
     }
 
     return total;
@@ -37,8 +36,8 @@ fn day9_2(inputs: &str) -> isize {
             .map(|x| x.parse().unwrap())
             .collect();
         history.reverse();
-        let n = find_next_sequence(&history);
-        total += n;
+        
+        total += find_next_sequence(&history);
     }
 
     return total;
