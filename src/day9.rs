@@ -36,7 +36,7 @@ fn day9_2(inputs: &str) -> isize {
             .map(|x| x.parse().unwrap())
             .collect();
         history.reverse();
-        
+
         total += find_next_sequence(&history);
     }
 
