@@ -19,8 +19,9 @@ impl Grid {
     }
 
     /// Up/Down Left/Right Neighbors, diagonals excluded
+    /// 
     /// point: is (y, x)
-    pub fn get_cardinal_neighbors(&self, point: (usize,usize)) -> Vec<(usize,usize)> {
+    pub fn get_cardinal_neighbors(&self, point: &(usize,usize)) -> Vec<(usize,usize)> {
         let mut n: Vec<(usize, usize)> = Vec::with_capacity(4);
         let row_max = self.map.len() - 1;
         let col_max = self.map[0].len() - 1;
@@ -44,8 +45,9 @@ impl Grid {
     }
 
     /// Get Cardnial and Diagnal Neighbors
+    /// 
     /// point: is (y, x)
-    pub fn get_all_neighbors(&self, point: (usize,usize)) -> Vec<(usize,usize)> {
+    pub fn get_all_neighbors(&self, point: &(usize,usize)) -> Vec<(usize,usize)> {
         let mut n: Vec<(usize, usize)> = Vec::with_capacity(8);
         n.append(&mut self.get_cardinal_neighbors(point));
         let row_max = self.map.len() - 1;
@@ -75,5 +77,20 @@ impl Grid {
         for row in self.map.iter() {
             println!("{:?}", String::from_utf8(row.clone()).unwrap());
         }
+    }
+
+    /// Returns the first (y,x) point of item, None if item is not found in the grid
+    /// 
+    /// item: is &u8
+    pub fn index_of(&self, item: &u8) -> Option<(usize,usize)> { 
+        for (i, y) in self.map.iter().enumerate() {
+            for (j, x) in y.iter().enumerate() {
+                if x == item {
+                    return Some((i,j));
+                }
+            }
+        }
+
+        return None;
     }
 }
