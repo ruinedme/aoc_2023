@@ -29,7 +29,7 @@ fn day3_1(inputs: &str) -> usize {
             match x {
                 b'0'..=b'9' => {
                     buff.push(x);
-                    grid.get_all_neighbors((row, col)).iter().for_each(|&n| {
+                    grid.get_all_neighbors(&(row, col)).iter().for_each(|&n| {
                         match grid.map[n.0][n.1] {
                             b'.' | b'0'..=b'9' => (),
                             _ => {
@@ -72,7 +72,7 @@ fn day3_2(inputs: &str) -> usize {
             match x {
                 b'0'..=b'9' => {
                     buff.push(x);
-                    grid.get_all_neighbors((row, col)).iter().for_each(|&n| {
+                    grid.get_all_neighbors(&(row, col)).iter().for_each(|&n| {
                         if grid.map[n.0][n.1] == b'*' {
                             is_gear = true;
                             gear_pos = n
