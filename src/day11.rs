@@ -18,62 +18,16 @@ pub fn run_day11(inputs: &str) {
 }
 
 fn day11_1(inputs: &str) -> usize {
-    let mut grid = Grid::new(inputs);
-    let mut rows_inserted = 0;
-    let mut cols_inserted = 0;
-    let mut empty_cols: Vec<usize> = Vec::with_capacity(grid.width());
+    let grid = Grid::new(inputs);
+    let scalar = 2;    
     let mut total = 0;
 
-    // Get Empty Rows
-    let empty_rows: Vec<usize> = grid
-        .map
-        .iter()
-        .enumerate()
-        .filter(|(_, x)| !x.contains(&b'#'))
-        .map(|(i, _)| i)
-        .collect();
-
-    // Insert expansion rows
-    #[allow(clippy::explicit_counter_loop)]
-    for i in empty_rows {
-        let t = vec![b'.'; grid.width()];
-        grid.map.insert(i + rows_inserted, t);
-        rows_inserted += 1;
-    }
-
-    // Get empty columns
-    for x in 0..grid.width() {
-        let mut non_empty = false;
-        for row in grid.map.iter() {
-            if row[x] == b'#' {
-                non_empty = true;
-                break;
-            }
-        }
-        if !non_empty {
-            empty_cols.push(x);
-        }
-    }
-
-    // Insert expansion columns
-    for i in empty_cols {
-        grid.insert_col(b'.', i + cols_inserted);
-        cols_inserted += 1;
-    }
-
     // Get galaxy co-ords
-    let galaxies = grid.find_all(&b'#');
+    let mut galaxies = grid.find_all(&b'#');
+    // "expand" the universe
+    galaxies = expand_galaxies(galaxies, &grid, scalar);
     
-    // better way to do this?
-    let mut pairs: HashSet<(usize, usize)> = HashSet::new();
-    for i in 0..galaxies.len() {
-        for j in 1..galaxies.len() {
-            if i != j && !pairs.contains(&(j, i)) {
-                pairs.insert((i, j));
-            }
-        }
-    }
-
+    let pairs: HashSet<(usize, usize)> = get_pairs(&galaxies);
     for (a, b) in pairs {
         total += grid.manhattan_distance(&galaxies[a], &galaxies[b]);
     }
@@ -83,21 +37,25 @@ fn day11_1(inputs: &str) -> usize {
 
 fn day11_2(inputs: &str) -> usize {
     let grid = Grid::new(inputs);
-
     let scalar = 1_000_000;
-    let mut empty_cols: Vec<usize> = Vec::with_capacity(grid.width());
     let mut total = 0;
 
-    // Get Empty Rows
-    let empty_rows: Vec<usize> = grid
-        .map
-        .iter()
-        .enumerate()
-        .filter(|(_, x)| !x.contains(&b'#'))
-        .map(|(i, _)| i)
-        .collect();
+    // Get galaxy co-ords
+    let mut galaxies = grid.find_all(&b'#');
+    // "expand" the universe
+    galaxies = expand_galaxies(galaxies, &grid, scalar);
 
-    // Get empty columns
+    let pairs = get_pairs(&galaxies);
+
+    for (a, b) in &pairs {
+        total += grid.manhattan_distance(&galaxies[*a], &galaxies[*b]);
+    }
+
+    return total;
+}
+
+fn get_empty_columns(grid: &Grid) -> Vec<usize> {
+    let mut empty_cols: Vec<usize> = Vec::with_capacity(grid.width());
     for x in 0..grid.width() {
         let mut non_empty = false;
         for row in grid.map.iter() {
@@ -111,9 +69,20 @@ fn day11_2(inputs: &str) -> usize {
         }
     }
 
-    // Get galaxy co-ords
-    let mut galaxies = grid.find_all(&b'#');
-    galaxies = galaxies
+    return empty_cols;
+}
+
+fn expand_galaxies(galaxies: Vec<(usize,usize)>, grid: &Grid, scalar: isize) -> Vec<(usize,usize)> {
+    let empty_cols = get_empty_columns(grid);
+    let empty_rows: Vec<usize> = grid
+        .map
+        .iter()
+        .enumerate()
+        .filter(|(_, x)| !x.contains(&b'#'))
+        .map(|(i, _)| i)
+        .collect();
+
+    return galaxies
         .iter()
         .map(|(y, x)| {
             let crossed_cols: isize =
@@ -130,7 +99,9 @@ fn day11_2(inputs: &str) -> usize {
             (*y + dy, *x + dx)
         })
         .collect();
+}
 
+fn get_pairs(galaxies: &Vec<(usize,usize)>) -> HashSet<(usize, usize)> {
     // better way to do this?
     let mut pairs: HashSet<(usize, usize)> = HashSet::new();
     for i in 0..galaxies.len() {
@@ -141,9 +112,5 @@ fn day11_2(inputs: &str) -> usize {
         }
     }
 
-    for (a, b) in &pairs {
-        total += grid.manhattan_distance(&galaxies[*a], &galaxies[*b]);
-    }
-
-    return total;
+    return pairs;
 }
