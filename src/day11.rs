@@ -7,12 +7,12 @@ use timer::profile;
 
 pub fn run_day11(inputs: &str) {
     profile! {
-        let day11_1 = day11_1(&inputs);
+        let day11_1 = day11_1(inputs);
         println!("Day 11-1: {day11_1}");
     }
 
     profile! {
-        let day11_2 = day11_2(&inputs);
+        let day11_2 = day11_2(inputs);
         println!("Day 11-2: {day11_2}");
     }
 }
@@ -34,6 +34,7 @@ fn day11_1(inputs: &str) -> usize {
         .collect();
 
     // Insert expansion rows
+    #[allow(clippy::explicit_counter_loop)]
     for i in empty_rows {
         let t = vec![b'.'; grid.width()];
         grid.map.insert(i + rows_inserted, t);
@@ -44,12 +45,9 @@ fn day11_1(inputs: &str) -> usize {
     for x in 0..grid.width() {
         let mut non_empty = false;
         for row in grid.map.iter() {
-            match row[x] {
-                b'#' => {
-                    non_empty = true;
-                    break;
-                }
-                _ => (),
+            if row[x] == b'#' {
+                non_empty = true;
+                break;
             }
         }
         if !non_empty {
@@ -103,12 +101,9 @@ fn day11_2(inputs: &str) -> usize {
     for x in 0..grid.width() {
         let mut non_empty = false;
         for row in grid.map.iter() {
-            match row[x] {
-                b'#' => {
-                    non_empty = true;
-                    break;
-                }
-                _ => (),
+            if row[x] == b'#' {
+                non_empty = true;
+                break;
             }
         }
         if !non_empty {
@@ -124,11 +119,11 @@ fn day11_2(inputs: &str) -> usize {
             let crossed_cols: isize =
                 empty_cols
                     .iter()
-                    .fold(0, |acc, cx| if cx < &x { acc + 1 } else { acc });
+                    .fold(0, |acc, cx| if cx < x { acc + 1 } else { acc });
             let crossed_rows: isize =
                 empty_rows
                     .iter()
-                    .fold(0, |acc, cy| if cy < &y { acc + 1 } else { acc });
+                    .fold(0, |acc, cy| if cy < y { acc + 1 } else { acc });
 
             let dx = (crossed_cols * (scalar - 1)).max(0) as usize;
             let dy = (crossed_rows * (scalar - 1)).max(0) as usize;

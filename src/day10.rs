@@ -7,12 +7,12 @@ use timer::profile;
 
 pub fn run_day10(inputs: &str) {
     profile! {
-        let day10_1 = day10_1(&inputs);
+        let day10_1 = day10_1(inputs);
         println!("Day 10-1: {day10_1}");
     }
 
     profile! {
-        let day10_2 = day10_2(&inputs);
+        let day10_2 = day10_2(inputs);
         println!("Day 10-2: {day10_2}");
     }
 }
@@ -116,11 +116,7 @@ fn day10_2(inputs: &str) -> usize {
                         let current = grid.map[i][x];
                         match current {
                             EAST_WEST => {
-                                if !horizontal_boundry {
-                                    horizontal_boundry = true;
-                                } else {
-                                    horizontal_boundry = false
-                                }
+                                horizontal_boundry = !horizontal_boundry;
                                 pipe_intersections += 1;
                             }
                             SOUTH_EAST | SOUTH_WEST | NORTH_EAST | NORTH_WEST => {
@@ -155,9 +151,6 @@ fn get_connections(grid: &Grid, pos: &(usize, usize)) -> Vec<(usize, usize)> {
         .iter()
         .filter_map(|&(y, x)| {
             let a = grid.map[y][x];
-            if a == GROUND {
-                ()
-            }
 
             match current {
                 NORTH_SOUTH => {

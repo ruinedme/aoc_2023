@@ -4,12 +4,12 @@ use timer::profile;
 
 pub fn run_day9(inputs: &str) {
     profile! {
-        let day9_1 = day9_1(&inputs);
+        let day9_1 = day9_1(inputs);
         println!("Day 9-1: {day9_1}");
     }
 
     profile! {
-        let day9_2 = day9_2(&inputs);
+        let day9_2 = day9_2(inputs);
         println!("Day 9-2: {day9_2}");
     }
 }
@@ -43,7 +43,7 @@ fn day9_2(inputs: &str) -> isize {
     return total;
 }
 
-fn find_next_sequence(sequence: &Vec<isize>) -> isize {
+fn find_next_sequence(sequence: &[isize]) -> isize {
     let next_sequence: Vec<isize> = sequence
         .iter()
         .enumerate()
