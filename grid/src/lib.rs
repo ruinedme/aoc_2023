@@ -75,7 +75,11 @@ impl Grid {
 
     pub fn print_map(&self) {
         for row in self.map.iter() {
-            println!("{:?}", String::from_utf8(row.clone()).unwrap());
+            for col in row.iter() {
+                print!("{}", char::from(*col));
+            }
+            println!();
+            // println!("{:?}", String::from_utf8(row.clone()).unwrap());
         }
     }
 
@@ -92,5 +96,55 @@ impl Grid {
         }
 
         return None;
+    }
+
+    /// Returns a a Vec of (y,x) pairs for a given item, Returns an empty Vec if no elements match
+    /// 
+    /// item is &u8
+    pub fn find_all(&self, item: &u8) -> Vec<(usize,usize)> {
+        let width = self.map[0].len();
+        return self.map.iter().flatten().enumerate().filter(|x| x.1 == item).map(|(i,_)| {
+            ( (i / width), (i % width) )
+        }).collect();
+    }
+
+    /// Inserts a row into the map at the given index. Consumes the row. Shifts all elements after to the right
+    /// 
+    /// row is Vec<u8>, index is usize
+    pub fn insert_row(&mut self, row: Vec<u8>, index: usize) {
+        self.map.insert(index, row);
+    }
+
+    /// Inserts the given element along the given column index, shifting all other elements to the right
+    pub fn insert_col(&mut self, element: u8, index: usize) {
+        for row in self.map.iter_mut() {
+            row.insert(index, element);
+        }
+    }
+
+    /// Returns the column width of the map, returns 0 if the map is empty.
+    /// 
+    /// Assumes all rows in the map are equal length
+    pub fn width(&self) -> usize {
+        if self.map.is_empty() {
+            return 0;
+        } else {
+            return self.map[0].len();
+        }
+    }
+
+    /// Returns the row height of the map, returns 0 if the map is empty.
+    pub fn height(&self) -> usize {
+        if self.map.is_empty() {
+            return 0;
+        } else {
+            return  self.map.len();
+        }
+    }
+
+    // Maybe makes more sense to go in a Math lib?
+    /// Calculates the manhattan distance |x1 - x2| + |y1 - y2| of two (y,x) points.
+    pub fn manhattan_distance(&self, a: &(usize,usize), b: &(usize,usize)) -> usize {
+        return a.1.abs_diff(b.1) + a.0.abs_diff(b.0);
     }
 }
