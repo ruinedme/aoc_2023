@@ -54,8 +54,16 @@ fn day11_2(inputs: &str) -> usize {
     return total;
 }
 
-fn get_empty_columns(grid: &Grid) -> Vec<usize> {
+fn expand_galaxies(galaxies: Vec<(usize,usize)>, grid: &Grid, scalar: isize) -> Vec<(usize,usize)> {
     let mut empty_cols: Vec<usize> = Vec::with_capacity(grid.width());
+    let empty_rows: Vec<usize> = grid
+        .map
+        .iter()
+        .enumerate()
+        .filter(|(_, x)| !x.contains(&b'#'))
+        .map(|(i, _)| i)
+        .collect();
+
     for x in 0..grid.width() {
         let mut non_empty = false;
         for row in grid.map.iter() {
@@ -68,19 +76,6 @@ fn get_empty_columns(grid: &Grid) -> Vec<usize> {
             empty_cols.push(x);
         }
     }
-
-    return empty_cols;
-}
-
-fn expand_galaxies(galaxies: Vec<(usize,usize)>, grid: &Grid, scalar: isize) -> Vec<(usize,usize)> {
-    let empty_cols = get_empty_columns(grid);
-    let empty_rows: Vec<usize> = grid
-        .map
-        .iter()
-        .enumerate()
-        .filter(|(_, x)| !x.contains(&b'#'))
-        .map(|(i, _)| i)
-        .collect();
 
     return galaxies
         .iter()
