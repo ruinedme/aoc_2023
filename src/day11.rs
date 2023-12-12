@@ -1,7 +1,5 @@
 #![allow(clippy::needless_return)]
 
-use std::collections::HashSet;
-
 use grid::Grid;
 use timer::profile;
 
