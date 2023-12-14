@@ -19,10 +19,7 @@ fn day12_1(inputs: &str) -> usize {
     for line in inputs.lines() {
         let split: Vec<&str> = line.split_ascii_whitespace().collect();
         let arrangement = split[0];
-        let groupings: Vec<usize> = split[1]
-            .split(',')            
-            .map(|x| x.parse().unwrap())
-            .collect();
+        let groupings: Vec<usize> = split[1].split(',').map(|x| x.parse().unwrap()).collect();
 
         // singular combination
         if groupings.iter().sum::<usize>() + groupings.len() - 1 == arrangement.len() {
