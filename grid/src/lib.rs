@@ -1,3 +1,4 @@
+#[derive(Debug,Clone)]
 pub struct Grid {
     pub map: Vec<Vec<u8>>
 }
