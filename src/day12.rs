@@ -20,8 +20,7 @@ fn day12_1(inputs: &str) -> usize {
         let split: Vec<&str> = line.split_ascii_whitespace().collect();
         let arrangement = split[0];
         let groupings: Vec<usize> = split[1]
-            .split(',')
-            .into_iter()
+            .split(',')            
             .map(|x| x.parse().unwrap())
             .collect();
 
@@ -30,20 +29,18 @@ fn day12_1(inputs: &str) -> usize {
             total += 1;
             continue;
         }
-        
+
         let mut good = 0;
         let mut bad = 0;
         let mut unkown = 0;
-        arrangement.chars().for_each(|c| {
-            match c {
-                '.' => good += 1,
-                '#' => bad += 1,
-                '?' => unkown += 1,
-                _ => (),
-            }
+        arrangement.chars().for_each(|c| match c {
+            '.' => good += 1,
+            '#' => bad += 1,
+            '?' => unkown += 1,
+            _ => (),
         });
         let spaces = good + bad + unkown;
-        println!("g {}, b {}, u {}, t {}", good,bad,unkown, spaces);
+        println!("g {}, b {}, u {}, t {}", good, bad, unkown, spaces);
     }
 
     return total;
