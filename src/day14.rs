@@ -148,22 +148,20 @@ fn day14_2(inputs: &str) -> usize {
 
 fn slide_rocks(grid: &mut Grid) {
     let rocks = grid.find_all(&b'O');
-    rocks
-        .iter()
-        .for_each(|rock| {
-            let mut y = rock.0;
-            let mut boulders = 0;
-            while y > 0 {
-                match grid.map[y - 1][rock.1] {
-                    b'O' => boulders += 1,
-                    b'#' => break,
-                    _ => (),
-                }
-                y -= 1;
+    rocks.iter().for_each(|rock| {
+        let mut y = rock.0;
+        let mut boulders = 0;
+        while y > 0 {
+            match grid.map[y - 1][rock.1] {
+                b'O' => boulders += 1,
+                b'#' => break,
+                _ => (),
             }
-            grid.map[rock.0][rock.1] = b'.';
-            grid.map[y + boulders][rock.1] = b'O';
-            // (y + boulders, rock.1)
-        });
-        // .collect();
+            y -= 1;
+        }
+        grid.map[rock.0][rock.1] = b'.';
+        grid.map[y + boulders][rock.1] = b'O';
+        // (y + boulders, rock.1)
+    });
+    // .collect();
 }
