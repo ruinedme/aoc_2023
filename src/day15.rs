@@ -19,28 +19,29 @@ fn day15_1(inputs: &str) -> usize {
 }
 
 fn day15_2(inputs: &str) -> usize {
-    let instructions: Vec<Instruction> = inputs.split(',').map(|s| Instruction::new(s)).collect();
+    let instructions: Vec<Instruction> = inputs.split(',').map(Instruction::new).collect();
     let mut boxes: Vec<Vec<Instruction>> = vec![Vec::new(); 256];
     for i in instructions {
         let box_index = hash(&i.label);
         let lens_index = boxes[box_index].iter().position(|x| x.label == i.label);
         match i.operator {
-            Operators::INSERT => {
+            Operators::Insert => {
                 if lens_index.is_some() {
                     boxes[box_index][lens_index.unwrap()] = i;
                 } else {
                     boxes[box_index].push(i);
                 }
             }
-            Operators::REMOVE => {
-                if lens_index.is_some() {
-                    boxes[box_index].remove(lens_index.unwrap());
+            Operators::Remove => {
+                if let Some(v) = lens_index {
+                    boxes[box_index].remove(v);
                 }
             }
-            Operators::NONE => (),
+            Operators::None => (),
         }
     }
 
+    // probably can be condensed, but nested folds make my brain hurt
     let mut total = 0;
     for (i, b) in boxes.iter().enumerate() {
         let mut focusing_power = 0;
@@ -59,7 +60,7 @@ fn hash(input: &str) -> usize {
     for c in input.chars() {
         t += c as usize;
         t *= 17;
-        t = t % 256;
+        t %= 256;
     }
 
     return t;
@@ -67,9 +68,9 @@ fn hash(input: &str) -> usize {
 
 #[derive(Debug, Clone)]
 enum Operators {
-    INSERT,
-    REMOVE,
-    NONE,
+    Insert,
+    Remove,
+    None,
 }
 
 #[derive(Debug, Clone)]
@@ -82,14 +83,14 @@ struct Instruction {
 impl Instruction {
     fn new(input: &str) -> Self {
         let mut label = String::new();
-        let mut operator = Operators::NONE;
+        let mut operator = Operators::None;
         let mut focal_len = None;
         for c in input.chars() {
             match c {
                 'a'..='z' => label.push(c),
-                '-' => operator = Operators::REMOVE,
-                '=' => operator = Operators::INSERT,
-                '1'..='9' => focal_len = Some(c as u8 - '0' as u8),
+                '-' => operator = Operators::Remove,
+                '=' => operator = Operators::Insert,
+                '1'..='9' => focal_len = Some(c as u8 - b'0'),
                 _ => (),
             }
         }
