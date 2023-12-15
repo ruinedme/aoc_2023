@@ -1,7 +1,5 @@
 #![allow(clippy::needless_return)]
 
-use std::collections::HashMap;
-
 use grid::Grid;
 use timer::profile;
 
@@ -40,8 +38,8 @@ fn day14_1(inputs: &str) -> usize {
 
 fn day14_2(inputs: &str) -> usize {
     let mut grid = Grid::new(inputs);
-
-    let mut weights: HashMap<usize,usize> = HashMap::new();
+    let mut sets: Vec<Vec<Vec<u8>>> = Vec::new();
+    sets.push(grid.map.clone());
 
     let cycles = 1000;
     for _ in 0..cycles {
@@ -106,7 +104,7 @@ fn day14_2(inputs: &str) -> usize {
         rocks.reverse();
         
         //tilt east
-        rocks = rocks.iter().map(|rock| {
+        rocks.iter().for_each(|rock| {
             let mut x = rock.1;
             let mut boulders = 0;
             while x < grid.width() - 1 {
@@ -120,15 +118,20 @@ fn day14_2(inputs: &str) -> usize {
             
             grid.map[rock.0][rock.1] = b'.';
             grid.map[rock.0][x-boulders] = b'O';
-            (rock.0,x-boulders)
-        }).collect();
-        let w = rocks.iter().map(|(y,_)| grid.height() - y).sum::<usize>();
+            // (rock.0,x-boulders)
+        });
 
-        weights.entry(w).and_modify(|x| *x += 1).or_insert(1);
+        if sets.contains(&grid.map) {
+            let index = sets.iter().position(|x| x == &grid.map).unwrap();
+            let cycle_len = sets.len() - index;
+            let final_index = index + (1_000_000_000 - index) % cycle_len;
+            grid.map = sets[final_index].clone();
+            let final_rocks = grid.find_all(&b'O');
+            return final_rocks.iter().map(|(y,_)| grid.height() - y).sum();
+        }
+        sets.push(grid.map.clone());
     }
 
     let rocks = grid.find_all(&b'O');
-
-    println!("{:#?}",weights.iter().filter(|x| *x.1 > 1 ).collect::<HashMap<&usize,&usize>>());
     return rocks.iter().map(|(y,_)| grid.height() - y).sum();
 }
