@@ -16,25 +16,9 @@ pub fn run_day14(inputs: &str) {
 }
 
 fn day14_1(inputs: &str) -> usize {
-    let grid = Grid::new(inputs);
-    let mut rocks = grid.find_all(&b'O');
-
-    rocks = rocks
-        .iter()
-        .map(|rock| {
-            let mut y = rock.0;
-            let mut boulders = 0;
-            while y > 0 {
-                match grid.map[y - 1][rock.1] {
-                    b'O' => boulders += 1,
-                    b'#' => break,
-                    _ => (),
-                }
-                y -= 1;
-            }
-            (y + boulders, rock.1)
-        })
-        .collect();
+    let mut grid = Grid::new(inputs);
+    slide_rocks(&mut grid);
+    let rocks = grid.find_all(&b'O');
 
     return rocks.iter().map(|(y, _)| grid.height() - y).sum();
 }
@@ -43,6 +27,18 @@ fn day14_2(inputs: &str) -> usize {
     let mut grid = Grid::new(inputs);
     let mut sets: Vec<Vec<Vec<u8>>> = Vec::new();
     sets.push(grid.map.clone());
+    // Couldn't get grid rotation method to work for some reason
+    // let mut grid_clone = grid.clone();
+    // for _ in 0..4 {
+    //     slide_rocks(&mut grid_clone);
+    //     println!("========================");
+    //     grid_clone.print_map();
+    //     println!("========================");
+    //     grid_clone.rotate_ccw();
+    // }
+    // slide_rocks(&mut grid_clone);
+    // grid_clone.print_map();
+    // println!("====== clone ========");
 
     let cycles = 1000;
     for _ in 0..cycles {
@@ -111,7 +107,6 @@ fn day14_2(inputs: &str) -> usize {
                 (y - boulders, rock.1)
             })
             .collect();
-
         rocks.sort();
         rocks.reverse();
 
@@ -134,6 +129,7 @@ fn day14_2(inputs: &str) -> usize {
         });
 
         if sets.contains(&grid.map) {
+            println!("found duplicate");
             let index = sets.iter().position(|x| x == &grid.map).unwrap();
             let cycle_len = sets.len() - index;
             let final_index = index + (1_000_000_000 - index) % cycle_len;
@@ -144,6 +140,30 @@ fn day14_2(inputs: &str) -> usize {
         sets.push(grid.map.clone());
     }
 
+    // let rocks = grid.find_all(&b'O');
+    // return rocks.iter().map(|(y, _)| grid.height() - y).sum();
+    println!("Didn't find pattern");
+    return 0;
+}
+
+fn slide_rocks(grid: &mut Grid) {
     let rocks = grid.find_all(&b'O');
-    return rocks.iter().map(|(y, _)| grid.height() - y).sum();
+    rocks
+        .iter()
+        .for_each(|rock| {
+            let mut y = rock.0;
+            let mut boulders = 0;
+            while y > 0 {
+                match grid.map[y - 1][rock.1] {
+                    b'O' => boulders += 1,
+                    b'#' => break,
+                    _ => (),
+                }
+                y -= 1;
+            }
+            grid.map[rock.0][rock.1] = b'.';
+            grid.map[y + boulders][rock.1] = b'O';
+            // (y + boulders, rock.1)
+        });
+        // .collect();
 }
