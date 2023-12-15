@@ -148,4 +148,28 @@ impl Grid {
     pub fn manhattan_distance(&self, a: &(usize,usize), b: &(usize,usize)) -> usize {
         return a.1.abs_diff(b.1) + a.0.abs_diff(b.0);
     }
+
+    /// Rotates the grid counter clockwise by 90 degrees
+    pub fn rotate_ccw(&mut self) {
+        let mut new_map: Vec<Vec<u8>> = Vec::new();
+
+        for column in (0..self.width()).into_iter().rev() {
+            let row: Vec<u8> = self.map.iter().map(|r| r[column]).collect();
+            new_map.push(row);
+        }
+
+        self.map = new_map;
+    }
+
+        /// Rotates the grid clockwise by 90 degrees
+        pub fn rotate_cw(&mut self) {
+            let mut new_map: Vec<Vec<u8>> = Vec::new();
+            for column in 0..self.width() {
+                let row: Vec<u8> = self.map.iter().rev().map(|r| r[column]).collect();
+
+                new_map.push(row);
+            }
+
+            self.map = new_map;
+        }
 }
