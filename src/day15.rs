@@ -56,14 +56,7 @@ fn day15_2(inputs: &str) -> usize {
 }
 
 fn hash(input: &str) -> usize {
-    let mut t = 0;
-    for c in input.chars() {
-        t += c as usize;
-        t *= 17;
-        t %= 256;
-    }
-
-    return t;
+    return input.chars().fold(0, |acc, c| ((acc + c as usize) * 17) % 256);
 }
 
 #[derive(Debug, Clone)]
@@ -88,9 +81,9 @@ impl Instruction {
         for c in input.chars() {
             match c {
                 'a'..='z' => label.push(c),
+                '1'..='9' => focal_len = Some(c as u8 - b'0'),
                 '-' => operator = Operators::Remove,
                 '=' => operator = Operators::Insert,
-                '1'..='9' => focal_len = Some(c as u8 - b'0'),
                 _ => (),
             }
         }

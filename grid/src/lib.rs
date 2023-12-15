@@ -9,12 +9,9 @@ impl Grid {
         let lines = inputs.lines();
     
         let mut input_map: Vec<Vec<u8>> = Vec::new();
-        for (row, line) in lines.enumerate() {
-            input_map.push(Vec::new());
-            for c in line.chars() {
-                let x: u8 = String::from(c).as_str().as_bytes()[0];
-                input_map[row].push(x)
-            }
+        for line in lines {
+            let bytes: Vec<u8> = line.bytes().collect();
+            input_map.push(bytes);
         }
         return  Grid { map: input_map };
     }
@@ -89,17 +86,15 @@ impl Grid {
     /// item: is &u8
     pub fn index_of(&self, item: &u8) -> Option<(usize,usize)> { 
         for (i, y) in self.map.iter().enumerate() {
-            for (j, x) in y.iter().enumerate() {
-                if x == item {
-                    return Some((i,j));
-                }
+            if let Some(j) = y.iter().position(|col| col == item) {
+                return Some((i,j));
             }
         }
 
         return None;
     }
 
-    /// Returns a a Vec of (y,x) pairs for a given item, Returns an empty Vec if no elements match
+    /// Returns a a Vec of (y,x) pairs for a given item, Returns an empty Vec if no elements match. Assumes all rows are of equal length
     /// 
     /// item is &u8
     pub fn find_all(&self, item: &u8) -> Vec<(usize,usize)> {
@@ -161,15 +156,15 @@ impl Grid {
         self.map = new_map;
     }
 
-        /// Rotates the grid clockwise by 90 degrees
-        pub fn rotate_cw(&mut self) {
-            let mut new_map: Vec<Vec<u8>> = Vec::new();
-            for column in 0..self.width() {
-                let row: Vec<u8> = self.map.iter().rev().map(|r| r[column]).collect();
-
-                new_map.push(row);
-            }
-
-            self.map = new_map;
+    /// Rotates the grid clockwise by 90 degrees
+    pub fn rotate_cw(&mut self) {
+        let mut new_map: Vec<Vec<u8>> = Vec::new();
+        
+        for column in 0..self.width() {
+            let row: Vec<u8> = self.map.iter().rev().map(|r| r[column]).collect();
+            new_map.push(row);
         }
+
+        self.map = new_map;
+    }
 }
